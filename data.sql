@@ -1,9 +1,9 @@
-\c biztime
+-- \c biztime
 
-DROP TABLE IF EXISTS invoices;
-DROP TABLE IF EXISTS companies;
-DROP TABLE IF EXISTS industries;
-DROP TABLE IF EXISTS companies_industries;
+DROP TABLE IF EXISTS industries CASCADE;
+DROP TABLE IF EXISTS companies CASCADE;
+DROP TABLE IF EXISTS invoices CASCADE;
+DROP TABLE IF EXISTS companies_industries CASCADE;
 
 CREATE TABLE industries (
     code text PRIMARY KEY,

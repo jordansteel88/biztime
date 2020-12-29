@@ -7,6 +7,14 @@ const db = require('../db');
 let testInvoice;
 let testCompany;
 
+beforeAll(async () => {
+    await Promise.all([db.query(`DELETE FROM companies`),
+                       db.query(`DELETE FROM invoices`),
+                       db.query(`DELETE FROM industries`),
+                       db.query(`DELETE FROM companies_industries`)]
+    );
+});
+
 beforeEach(async () => {
     const compResult = await db.query(
         `INSERT INTO companies (code, name, description)
@@ -67,7 +75,8 @@ describe("POST /invoices", () => {
 
 describe("PUT /invoices/:id", () => {
     test("Updates a single invoice", async () => {
-        const res = await request(app).put(`/invoices/${testInvoice.id}`).send({ amt: '999' });
+        console.log(testInvoice.id);
+        const res = await request(app).put(`/invoices/${testInvoice.id}`).send({ amt: 999, paid: false });
 
         expect(res.statusCode).toBe(200);
         expect(res.body.invoice.amt).toEqual(999);

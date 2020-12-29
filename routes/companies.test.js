@@ -6,11 +6,19 @@ const db = require('../db');
 
 let testCompany;
 
+beforeAll(async () => {
+    await Promise.all([db.query(`DELETE FROM companies`),
+                       db.query(`DELETE FROM invoices`),
+                       db.query(`DELETE FROM industries`),
+                       db.query(`DELETE FROM companies_industries`)]
+    );
+});
+
 beforeEach(async () => {
     const result = await db.query(
-        `INSERT INTO companies (code, name, description)
-         VALUES ('testco', 'TestCo', 'test company') 
-         RETURNING code, name, description`);
+        `INSERT INTO companies (code, name, description, industry)
+         VALUES ('testco', 'TestCo', 'test company', null) 
+         RETURNING code, name, description, industry`);
     testCompany = result.rows[0];
 });
 
@@ -47,12 +55,11 @@ describe("GET /companies/:code", () => {
 
 describe("POST /companies", () => {
     test("Creates a single company", async () => {
-        const res = await request(app).post('/companies').send({ code: "tc2",  name: 'TestCo2', description: 'test company 2' });
+        const res = await request(app).post('/companies').send({ code: "tc2",  name: 'TestCo2', description: 'test company 2', industry: null });
 
         expect(res.statusCode).toBe(201);
-        expect(res.body).toEqual({
-        company: { code: "tc2",  name: 'TestCo2', description: 'test company 2' }
-        });
+        expect(res.body.company.name).toEqual("TestCo2");
+        expect(res.body.company.description).toEqual("test company 2");
     });
 });
 
