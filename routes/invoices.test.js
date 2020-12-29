@@ -75,7 +75,6 @@ describe("POST /invoices", () => {
 
 describe("PUT /invoices/:id", () => {
     test("Updates a single invoice", async () => {
-        console.log(testInvoice.id);
         const res = await request(app).put(`/invoices/${testInvoice.id}`).send({ amt: 999, paid: false });
 
         expect(res.statusCode).toBe(200);
